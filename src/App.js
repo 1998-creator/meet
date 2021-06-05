@@ -4,7 +4,8 @@ import EventList from "./EventList";
 import CitySearch from "./CitySearch";
 import NumberOfEvents from "./NumberOfEvents";
 import { getEvents, extractLocations } from "./api";
-// import { WarningAlert } from "./Alert";
+import { WarningAlert } from "./Alert";
+import { OfflineAlert } from './Alert';
 import "./nprogress.css";
 // import {
 //   ScatterChart,
@@ -39,10 +40,16 @@ class App extends Component {
       }
 
       if (!navigator.onLine) {
-        this.setState({
-          infoText:
-            "You are currently offline.  The list of events may not be up-to-date.",
-        });
+        if (!navigator.onLine) {
+          this.setState({
+            offlinealert: 'Cached data is being displayed.'
+          })
+        }
+        else {
+          this.setState({
+            warningText: ''
+          })
+        }
       }
     });
   }
@@ -98,9 +105,9 @@ class App extends Component {
       <div className="App">
         <h1>Let's Meet!</h1>
         <h4>Select your nearest city</h4>
-        {/* <div className="offline-alert">
+        <div className="offline-alert">
           <WarningAlert text={this.state.infoText} />
-        </div> */}
+        </div>
         <CitySearch
           updateEvents={this.updateEvents}
           locations={this.state.locations}
@@ -122,6 +129,7 @@ class App extends Component {
             </ScatterChart>
           </ResponsiveContainer> */}
         </div>
+        <OfflineAlert text={this.state.offlinealert} />
         <EventList events={this.state.events} />
       </div>
     );
